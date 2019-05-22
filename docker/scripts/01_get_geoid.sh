@@ -21,16 +21,17 @@ if [ $(echo -n "$GEOID" | wc -c) -ne 5 ]; then
 fi
 
 # Create output folders if they don't exist
-if [ ! -d /resources/outputs/"$GEOID" ]; then
-    mkdir /resources/outputs/"$GEOID"
-fi
-
+mkdir -p /resources/outputs/"$GEOID"
+mkdir -p /resources/inputs/osm
+mkdir -p /resources/inputs/buffers
+mkdir -p /resources/inputs/shapefiles/counties
+mkdir -p /resources/inputs/shapefiles/blocks
 
 ##### INPUTS #####
 
 # Get OSM North America file
-if [ ! -f /resources/inputs/"$osm_file" ]; then
-    wget -O /resources/inputs/"$osm_file" \
+if [ ! -f /resources/inputs/osm/"$osm_file" ]; then
+    wget -O /resources/inputs/osm/"$osm_file" \
          "$osm_url"/"$osm_file"
 fi
 
@@ -68,6 +69,6 @@ if [ ! -f /resources/outputs/"$GEOID"/"$GEOID".pbf ]; then
 fi
 
 if [ ! -f /resources/outputs/"$GEOID"/"$GEOID"-origins ]; then
-    python3 /resources/scripts/03_get_origins.py
+    python3 /resources/scripts/03_get_origins_destinations.py
 fi
 

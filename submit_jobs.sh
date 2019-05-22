@@ -1,10 +1,11 @@
 #!/bin/bash
 for GEOID in 17031; do
     docker run -it \
-        -v /home/snow/otp-resources/outputs/:/resources/outputs/ \
-        -v /home/snow/otp-resources/inputs/:/resources/inputs/ \
-        -e TYPE=TRACT \
+        -v /home/snow/resources/outputs/:/resources/outputs/ \
+        -v /home/snow/resources/inputs/:/resources/inputs/ \
+        -v /home/snow/otp-resources/docker/scripts/:/tmp/scripts/ \
+        -e TYPE=BLOCK \
         -e GEOID=$GEOID \
-        otp-resources
+        otp-resources /bin/bash
 
 done

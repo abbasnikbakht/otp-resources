@@ -57,19 +57,12 @@ RUN dpkg-reconfigure locales && \
     /usr/sbin/update-locale LANG=C.UTF-8
 
 RUN mkdir /resources/ && \
-    mkdir /resources/scripts &&\
-    mkdir /resources/outputs/ && \
-    mkdir /resources/inputs/ && \
-    mkdir /resources/inputs/osm && \
-    mkdir /resources/inputs/buffers && \
-    mkdir /resources/inputs/shapefiles && \
-    mkdir /resources/inputs/shapefiles/blocks && \
-    mkdir /resources/inputs/shapefiles/counties 
+    mkdir /resources/scripts 
 
 ENV LC_ALL C.UTF-8
 ADD scripts/ /resources/scripts/
 RUN chmod +x /resources/scripts/01_get_geoid.sh
 
-CMD ["/bin/bash" "-c" "/resources/scripts/01_get_geoid.sh"]
+CMD ["/bin/bash", "-c", "/resources/scripts/01_get_geoid.sh"]
 
 
