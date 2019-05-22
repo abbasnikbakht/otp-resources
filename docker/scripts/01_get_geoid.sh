@@ -29,14 +29,18 @@ mkdir -p /resources/inputs/shapefiles/blocks
 
 ##### INPUTS #####
 
+echo "Now processing county: "$GEOID""
+
 # Get OSM North America file
 if [ ! -f /resources/inputs/osm/"$osm_file" ]; then
+    echo "Downloading North American OSM extract from Geofabrik..."
     wget -O /resources/inputs/osm/"$osm_file" \
          "$osm_url"/"$osm_file"
 fi
 
 # Get national county file
 if [ ! -f /resources/inputs/shapefiles/counties/"$county_file".shp ]; then
+    echo "Downloading national county shapefile from TIGER..."
     wget -O /resources/inputs/shapefiles/counties/"$county_file".zip \
         "$county_url"/"$county_file".zip
     unzip /resources/inputs/shapefiles/counties/"$county_file".zip \
@@ -53,6 +57,7 @@ fi
 
 # Create OSM tag extract if it doesn't exist
 if [ ! -f /resources/inputs/osm/"$tag_file" ]; then
+    echo "Creating a tag filtered version of the NA OSM file..."
     osmium tags-filter /resources/inputs/osm/"$osm_file" \
         w/highway="$(cat /tmp/osm_tags.txt | tr '\n' ',')" \
         --overwrite --progress \
@@ -61,6 +66,7 @@ fi
 
 # Create a clipped PBF of the buffered county
 if [ ! -f /resources/outputs/"$GEOID"/"$GEOID".pbf ]; then
+    echo "Creating a clipped PBF of OSM ways in the "$GEOID" buffer..."
     clipping_poly="/resources/inputs/buffers/"$GEOID".geojson"
     osmium extract -p "$clipping_poly" \
         /resources/inputs/osm/"$tag_file" \
@@ -68,7 +74,10 @@ if [ ! -f /resources/outputs/"$GEOID"/"$GEOID".pbf ]; then
         -o /resources/outputs/"$GEOID"/"$GEOID".pbf
 fi
 
-if [ ! -f /resources/outputs/"$GEOID"/"$GEOID"-origins ]; then
-    python3 /resources/scripts/03_get_origins_destinations.py
-fi
+echo "Generating origins and destinations files for "$GEOID"..."
+python3 /resources/scripts/03_get_origins_destinations.py
 
+echo "Grabbing GTFS feeds for "$GEOID"..."
+python3 /resources/scripts/04_get_transit_feeds.py
+
+echo "Finishing processing county "$GEOID""

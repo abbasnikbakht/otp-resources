@@ -101,6 +101,7 @@ loc_gdf = gpd.GeoDataFrame(loc_df, geometry=gpd.points_from_xy(
 blocks_in_buff = gpd.sjoin(loc_gdf, buffer_gdf, how='left', op='intersects')
 blocks_in_buff = blocks_in_buff.loc[pd.notnull(blocks_in_buff['geoid']), ['GEOID10', 'geometry']]
 
+# Merge block pops with block points
 print('Merging block locations and block populations...')
 blocks_merged = blocks_in_buff.merge(
         pop_df[['BLOCKID10', 'POP10']],
@@ -108,6 +109,7 @@ blocks_merged = blocks_in_buff.merge(
         right_on = 'BLOCKID10',
         how = 'left')
 
+# If type is block, clean up and save to CSV
 if type_geom == 'BLOCK':
     blocks_merged.to_csv(os.path.join(output_path, geoid + '.csv'), index=False)
     print('Saving block centroids to CSV...')
@@ -122,6 +124,8 @@ if type_geom == 'BLOCK':
     blocks_merged.loc[blocks_merged.GEOID.str.startswith(geoid, na=False)].to_csv(
             os.path.join(output_path, geoid + '-origins.csv'), index=False)
 
+# If type is tract, find pop-weighted average of block centroids
+# then clean up and save to CSV
 elif type_geom == 'TRACT':
     print('Converting block centroids to Albers...')
     blocks_merged = blocks_merged.to_crs(epsg = 2163)
@@ -150,10 +154,6 @@ elif type_geom == 'TRACT':
     blocks_agg_gdf.loc[blocks_agg_gdf.GEOID.str.startswith(geoid, na=False)].to_csv(
             os.path.join(output_path, geoid + '-origins.csv'), index=False)
 
-
 else:
     pass
-
-## FIX X Y SWITCHING
-
 

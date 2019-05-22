@@ -19,7 +19,7 @@ buffer_path = '/resources/inputs/buffers/'
 # Convert shapefile CRS to Albers, buffer, then convert the buffered
 # counties back to 83. Necessary for clipping with osmium
 
-print("Buffering all US counties...")
+print("Now buffering all US counties by " + str(buffer) + "meters...")
 
 gdf = gpd.read_file(os.path.join(county_path, county_file))
 gdf = gdf.to_crs(epsg = 2163)
