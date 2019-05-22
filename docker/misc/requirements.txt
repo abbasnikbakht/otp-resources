@@ -1,0 +1,7 @@
+rasterio>=1.0a12
+fiona
+shapely
+pandas
+geopandas
+pyproj
+simpledbf
