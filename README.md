@@ -35,7 +35,7 @@ The container generates the following outputs:
 - GEOID.pbf (a clipped OSM PBF of all the buffered GEOID area)
 - GTFSFEED.zip (multiple, all GTFS feed zips of systems that lie within the buffer area)
 
-Outputs are structured in the following way (using two outputs as an example):
+Output files are structured in the following way (using two GEOIDs as an example):
 
 ```
 outputs

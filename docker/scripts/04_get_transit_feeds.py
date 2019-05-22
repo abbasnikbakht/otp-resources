@@ -57,5 +57,5 @@ for full_id in feeds.id:
     print('Now downloading feed: ' + full_id)
     feed_url = 'https://api.transitfeeds.com/v1/getLatestFeedVersion?key=' + \
     api_key + '&feed=' + str(full_id)
-    file_name = full_id.split('/')[0] + '.zip'
+    file_name = full_id.replace('/', '') + '.zip'
     urllib.request.urlretrieve(feed_url, os.path.join(output_path, file_name))
