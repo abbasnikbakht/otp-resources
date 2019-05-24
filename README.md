@@ -13,7 +13,7 @@ The container takes the following inputs as Docker environmental variables:
 Inputs files are structured in the following way (using GEOID=17031 as an example):
 
 ```
-inputs
+/resources/inputs/
 ├── buffers
 │   └── 17031.geojson
 ├── osm
@@ -38,7 +38,7 @@ The container generates the following outputs:
 Output files are structured in the following way (using two GEOIDs as an example):
 
 ```
-outputs
+/resources/graphs/
 ├── 06037
 │   ├── 06037-destinations.csv
 │   ├── 06037-origins.csv

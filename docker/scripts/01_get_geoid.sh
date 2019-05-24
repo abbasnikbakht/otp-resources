@@ -21,7 +21,7 @@ if [ $(echo -n "$GEOID" | wc -c) -ne 5 ]; then
 fi
 
 # Create output folders if they don't exist
-mkdir -p /resources/outputs/"$GEOID"
+mkdir -p /resources/graphs/"$GEOID"
 mkdir -p /resources/inputs/osm
 mkdir -p /resources/inputs/buffers
 mkdir -p /resources/inputs/shapefiles/counties
@@ -65,13 +65,13 @@ if [ ! -f /resources/inputs/osm/"$tag_file" ]; then
 fi
 
 # Create a clipped PBF of the buffered county
-if [ ! -f /resources/outputs/"$GEOID"/"$GEOID".pbf ]; then
+if [ ! -f /resources/graphs/"$GEOID"/"$GEOID".pbf ]; then
     echo "Creating a clipped PBF of OSM ways in the "$GEOID" buffer..."
     clipping_poly="/resources/inputs/buffers/"$GEOID".geojson"
     osmium extract -p "$clipping_poly" \
         /resources/inputs/osm/"$tag_file" \
         --overwrite --progress \
-        -o /resources/outputs/"$GEOID"/"$GEOID".pbf
+        -o /resources/graphs/"$GEOID"/"$GEOID".pbf
 fi
 
 echo "Generating origins and destinations files for "$GEOID"..."

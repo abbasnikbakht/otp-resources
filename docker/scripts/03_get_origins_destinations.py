@@ -17,7 +17,7 @@ year = os.environ.get('year')
 buffer_path = '/resources/inputs/buffers/'
 county_path = '/resources/inputs/shapefiles/counties/'
 block_path = '/resources/inputs/shapefiles/blocks/'
-output_path = '/resources/outputs/' + geoid + '/'
+output_path = '/resources/graphs/' + geoid + '/'
 
 county_file = os.environ.get('county_file') + '.shp'
 

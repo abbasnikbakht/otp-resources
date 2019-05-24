@@ -15,7 +15,7 @@ api_key = os.environ.get('API_KEY')
 
 # Setting output and input paths
 buffer_path = '/resources/inputs/buffers/'
-output_path = '/resources/outputs/' + geoid + '/'
+output_path = '/resources/graphs/' + geoid + '/'
 
 # Reading in the appropriate buffered county
 buffer_gdf = gpd.read_file(os.path.join(buffer_path, geoid + '.geojson'))
