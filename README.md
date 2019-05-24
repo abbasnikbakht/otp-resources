@@ -1,11 +1,13 @@
 ## OTP Resource Downloader
 
-This is a container designed to download the resources necessary to create block or tract-level distance matrices using OpenTripPlanner.
+This is a Docker container designed to generate the files necessary to calculate Census block or tract-level distance matrices using OpenTripPlanner. It uses counties as a unit of work, taking a county FIPS code as input and outputting the files `/resources/graphs/$GEOID/` inside the container (where $GEOID is the FIPS code of the county). 
+
+It will download some intermediate
 
 ### Inputs
 The container takes the following inputs as Docker environmental variables:
 
-- GEOID (the five-digit FIPS code for a U.S. county)
+- GEOID (the five-digit, 2010 FIPS code for a U.S. county)
 - TYPE (either TRACT or BLOCK, the type of origin and destinations file to return) 
 - API_KEY (a transitfeeds.com API key for getting GTFS feeds)
 - BUFFER_SIZE_M (the size of the county buffer, in meters)

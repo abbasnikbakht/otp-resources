@@ -22,6 +22,7 @@ fi
 
 # Create output folders if they don't exist
 mkdir -p /resources/graphs/"$GEOID"
+mkdir -p /resources/zipped/
 mkdir -p /resources/inputs/osm
 mkdir -p /resources/inputs/buffers
 mkdir -p /resources/inputs/shapefiles/counties
@@ -81,3 +82,5 @@ echo "Grabbing GTFS feeds for "$GEOID"..."
 python3 /resources/scripts/04_get_transit_feeds.py
 
 echo "Finishing processing county "$GEOID""
+tar -cvzf /resources/zipped/"$GEOID".tar.gz --exclude=*.obj \
+    /resources/graphs/"$GEOID"/

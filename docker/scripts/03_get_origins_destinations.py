@@ -112,8 +112,8 @@ blocks_merged = blocks_in_buff.merge(
 # If type is block, clean up and save to CSV
 if type_geom == 'BLOCK':
     print('Saving block centroids to CSV...')
-    blocks_merged['X'] = blocks_merged.geometry.y
-    blocks_merged['Y'] = blocks_merged.geometry.x
+    blocks_merged['X'] = blocks_merged.geometry.x
+    blocks_merged['Y'] = blocks_merged.geometry.y
     blocks_merged = blocks_merged[['GEOID10', 'Y', 'X', 'POP10']]
     blocks_merged = blocks_merged.rename(
             index=str, columns={'GEOID10': 'GEOID', 'POP10': 'POP'})
