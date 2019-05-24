@@ -111,7 +111,6 @@ blocks_merged = blocks_in_buff.merge(
 
 # If type is block, clean up and save to CSV
 if type_geom == 'BLOCK':
-    blocks_merged.to_csv(os.path.join(output_path, geoid + '.csv'), index=False)
     print('Saving block centroids to CSV...')
     blocks_merged['X'] = blocks_merged.geometry.y
     blocks_merged['Y'] = blocks_merged.geometry.x
