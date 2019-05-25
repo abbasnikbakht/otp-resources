@@ -3,7 +3,7 @@
 This is a Docker container designed to generate the files necessary to calculate Census block or tract-level distance matrices using OpenTripPlanner. It uses counties as a unit of work, taking a county FIPS code as input and saving outputs to `/resources/graphs/$GEOID/` inside the container (where $GEOID is the FIPS code of the county). 
 
 ### Inputs
-The container takes the following inputs as Docker environmental variables:
+The container takes the following inputs as Docker environmental variables, all arguments are required:
 
 - GEOID (the five-digit, 2010 FIPS code for a U.S. county)
 - TYPE (either TRACT or BLOCK, the type of origin and destinations file to return) 
@@ -20,7 +20,7 @@ Inputs files saved to `/resources/inputs/` are structured in the following way (
 │   └── 17031.geojson (buffered boundary of the $GEOID county)
 ├── osm
 │   ├── north-america-latest.osm.pbf (Geofabrik download of the North America OSM file)
-│   └── tag_extract.pbf (North American OSM file with only specific tagged ways included, see docker/misc/osm_tags.txt for a list of included tags)
+│   └── tag_extract.pbf (OSM file with specific tags, see docker/misc/osm_tags.txt for a list of included tags)
 └── shapefiles
     ├── blocks
     │   ├── tl_2010_17_tabblock10.dbf (TIGER block shapefile DBF containing lat/lon centroid)
