@@ -11,7 +11,6 @@ from shapely.geometry import MultiPolygon, Polygon, mapping
 
 # Importing ENV variables
 geoid = str(os.environ.get('GEOID'))
-type_geom = os.environ.get('TYPE')
 year = os.environ.get('year')
 
 buffer_path = '/resources/inputs/buffers/'
@@ -109,50 +108,44 @@ blocks_merged = blocks_in_buff.merge(
         right_on = 'BLOCKID10',
         how = 'left')
 
-# If type is block, clean up and save to CSV
-if type_geom == 'BLOCK':
-    print('Saving block centroids to CSV...')
-    blocks_merged['X'] = blocks_merged.geometry.x
-    blocks_merged['Y'] = blocks_merged.geometry.y
-    blocks_merged = blocks_merged[['GEOID10', 'Y', 'X', 'POP10']]
-    blocks_merged = blocks_merged.rename(
-            index=str, columns={'GEOID10': 'GEOID', 'POP10': 'POP'})
+# For blocks, clean up and save to CSV
+print('Saving block centroids to CSV...')
+blocks_merged['X'] = blocks_merged.geometry.x
+blocks_merged['Y'] = blocks_merged.geometry.y
+blocks_merged = blocks_merged[['GEOID10', 'Y', 'X', 'POP10']]
+blocks_merged = blocks_merged.rename(
+        index=str, columns={'GEOID10': 'GEOID', 'POP10': 'POP'})
 
-    blocks_merged.to_csv(
-            os.path.join(output_path, geoid + '-destinations.csv'), index=False)
-    blocks_merged.loc[blocks_merged.GEOID.str.startswith(geoid, na=False)].to_csv(
-            os.path.join(output_path, geoid + '-origins.csv'), index=False)
+blocks_merged.to_csv(
+        os.path.join(output_path, geoid + '-destinations-BLOCK.csv'), index=False)
+blocks_merged.loc[blocks_merged.GEOID.str.startswith(geoid, na=False)].to_csv(
+        os.path.join(output_path, geoid + '-origins-BLOCK.csv'), index=False)
 
-# If type is tract, find pop-weighted average of block centroids
+# For tracts, find pop-weighted average of block centroids
 # then clean up and save to CSV
-elif type_geom == 'TRACT':
-    print('Converting block centroids to Albers...')
-    blocks_merged = blocks_merged.to_crs(epsg = 2163)
-    blocks_merged['X'] = blocks_merged.geometry.x
-    blocks_merged['Y'] = blocks_merged.geometry.y
-    blocks_merged = blocks_merged[['GEOID10', 'Y', 'X', 'POP10']]
-    blocks_merged = blocks_merged.rename(
-            index=str, columns={'GEOID10': 'GEOID', 'POP10': 'POP'})
+print('Converting block centroids to Albers...')
+blocks_merged = blocks_merged.to_crs(epsg = 2163)
+blocks_merged['X'] = blocks_merged.geometry.x
+blocks_merged['Y'] = blocks_merged.geometry.y
+blocks_merged = blocks_merged[['GEOID10', 'Y', 'X', 'POP10']]
+blocks_merged = blocks_merged.rename(
+        index=str, columns={'GEOID10': 'GEOID', 'POP10': 'POP'})
 
-    print('Finding pop-weighted tract centroids...')
-    blocks_merged['TRACT'] = blocks_merged['GEOID'].str.slice(0, 11)
-    wm = lambda x: np.average(x, weights=blocks_merged.loc[x.index, "POP"] + 1)
-    blocks_agg = blocks_merged.groupby('TRACT').agg(
-            {'Y': wm, 'X': wm, 'POP': 'sum'}).reset_index()
+print('Finding pop-weighted tract centroids...')
+blocks_merged['TRACT'] = blocks_merged['GEOID'].str.slice(0, 11)
+wm = lambda x: np.average(x, weights=blocks_merged.loc[x.index, "POP"] + 1)
+blocks_agg = blocks_merged.groupby('TRACT').agg(
+        {'Y': wm, 'X': wm, 'POP': 'sum'}).reset_index()
 
-    print('Saving tract centroids to CSV...')
-    blocks_agg_gdf = gpd.GeoDataFrame(blocks_agg, geometry=gpd.points_from_xy(
-        blocks_agg.X, blocks_agg.Y), crs=from_epsg(2163)).to_crs(4326)
-    blocks_agg_gdf['X'] = blocks_agg_gdf.geometry.y
-    blocks_agg_gdf['Y'] = blocks_agg_gdf.geometry.x
-    blocks_agg_gdf = blocks_agg_gdf.drop(columns='geometry').rename(
-            index=str, columns={'TRACT': 'GEOID'})
+print('Saving tract centroids to CSV...')
+blocks_agg_gdf = gpd.GeoDataFrame(blocks_agg, geometry=gpd.points_from_xy(
+    blocks_agg.X, blocks_agg.Y), crs=from_epsg(2163)).to_crs(4326)
+blocks_agg_gdf['X'] = blocks_agg_gdf.geometry.y
+blocks_agg_gdf['Y'] = blocks_agg_gdf.geometry.x
+blocks_agg_gdf = blocks_agg_gdf.drop(columns='geometry').rename(
+        index=str, columns={'TRACT': 'GEOID'})
 
-    blocks_agg_gdf.to_csv(
-            os.path.join(output_path, geoid + '-destinations.csv'), index=False)
-    blocks_agg_gdf.loc[blocks_agg_gdf.GEOID.str.startswith(geoid, na=False)].to_csv(
-            os.path.join(output_path, geoid + '-origins.csv'), index=False)
-
-else:
-    pass
-
+blocks_agg_gdf.to_csv(
+        os.path.join(output_path, geoid + '-destinations-TRACT.csv'), index=False)
+blocks_agg_gdf.loc[blocks_agg_gdf.GEOID.str.startswith(geoid, na=False)].to_csv(
+        os.path.join(output_path, geoid + '-origins-TRACT.csv'), index=False)

@@ -6,7 +6,6 @@ This is a Docker container designed to generate the files necessary to calculate
 The container takes the following inputs as Docker environmental variables, all arguments are required:
 
 - GEOID (the five-digit, 2010 FIPS code for a U.S. county)
-- TYPE (either TRACT or BLOCK, the type of origin and destinations file to return) 
 - API_KEY (a transitfeeds.com API key for getting GTFS feeds)
 - BUFFER_SIZE_M (the size of the county buffer, in meters)
 
@@ -20,7 +19,8 @@ Inputs files saved to `/resources/inputs/` are structured in the following way (
 │   └── 17031.geojson (buffered boundary of the $GEOID county)
 ├── osm
 │   ├── north-america-latest.osm.pbf (Geofabrik download of the North America OSM file)
-│   └── tag_extract.pbf (OSM file with specific tags, see docker/misc/osm_tags.txt for a list of included tags)
+│   ├── tag_extract_all.pbf (OSM file with all tags for highway, cycleway, sidewalk, and busway; used for TRANSIT and WALK modes)
+│   └── tag_extract_car.pbf (OSM file with highway and only specific tags, see misc/osm_tags_car.txt for list; used for CAR mode)
 └── shapefiles
     ├── blocks
     │   ├── tl_2010_17_tabblock10.dbf (TIGER block shapefile DBF containing lat/lon centroid)
@@ -32,10 +32,13 @@ Inputs files saved to `/resources/inputs/` are structured in the following way (
 ### Outputs
 Upon being run, the container generates the following outputs and saves them to `/resources/graphs/$GEOID/`:
 
-- GEOID-destinations.csv (all tract or block locations within the buffer area)
-- GEOID-origins.csv (all tracts or block locations only within the GEOID)
-- GEOID.pbf (a clipped OSM PBF of all the buffered GEOID area)
-- transi_system_name.zip (multiple, all GTFS feed zips of systems that lie within the buffer area)
+- GEOID-destinations-BLOCK.csv (block locations within the buffered county area)
+- GEOID-origins-BLOCK.csv (block locations only within the GEOID)
+- GEOID-destinations-TRACT.csv (tract locations within the buffered county area)
+- GEOID-origins-TRACT.csv (tract locations only within the GEOID)
+- osm/GEOID-car.pbf (a clipped OSM PBF of the buffered GEOID area with only car-passable OSM ways)
+- osm/GEOID-all.pbf (a clipped OSM PBF of the buffered GEOID area with all OSM ways)
+- transit_system_name.zip (multiple, all GTFS feed zips of systems that lie within the buffer area)
 
 Output files are structured in the following way (using two GEOIDs as an example):
 
@@ -44,12 +47,16 @@ Output files are structured in the following way (using two GEOIDs as an example
 ├── 06037
 │   ├── 06037-destinations.csv 
 │   ├── 06037-origins.csv
-│   ├── 06037.pbf
+│   ├── osm
+│   │   ├── 06037-all.pbf
+│   │   └── 06037-car.pbf
 │   └── la-transit.zip
 └── 17031
     ├── 17031-destinations.csv
     ├── 17031-origins.csv
-    ├── 17031.pbf
+    ├── osm
+    │   ├── 17031-all.pbf
+    │   └── 17031-car.pbf 
     ├── chicago-transit-authority.zip
     ├── janesville-transit-system.zip
     ├── metra.zip
@@ -58,6 +65,3 @@ Output files are structured in the following way (using two GEOIDs as an example
 
 ```
 
-### Notes
-
-Output files are also saved as a tarball to `/resources/zipped/$GEOID.tar.gz`. This output may be preferable to use when using S3 or when storing files long-term.
