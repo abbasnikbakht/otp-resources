@@ -112,13 +112,14 @@ blocks_merged = blocks_in_buff.merge(
 print('Saving block centroids to CSV...')
 blocks_merged['X'] = blocks_merged.geometry.x
 blocks_merged['Y'] = blocks_merged.geometry.y
-blocks_merged = blocks_merged[['GEOID10', 'Y', 'X', 'POP10']]
-blocks_merged = blocks_merged.rename(
+blocks_merged_no_geo = blocks_merged[['GEOID10', 'Y', 'X', 'POP10']]
+blocks_merged_no_geo = blocks_merged_no_geo.rename(
         index=str, columns={'GEOID10': 'GEOID', 'POP10': 'POP'})
 
-blocks_merged.to_csv(
+blocks_merged_no_geo.to_csv(
         os.path.join(output_path, geoid + '-destinations-BLOCK.csv'), index=False)
-blocks_merged.loc[blocks_merged.GEOID.str.startswith(geoid, na=False)].to_csv(
+blocks_merged_no_geo.loc[
+        blocks_merged_no_geo.GEOID.str.startswith(geoid, na=False)].to_csv(
         os.path.join(output_path, geoid + '-origins-BLOCK.csv'), index=False)
 
 # For tracts, find pop-weighted average of block centroids

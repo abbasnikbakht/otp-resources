@@ -7,8 +7,8 @@ API_KEY="example_key"
 for GEOID in $(cat counties.csv); do
 
     docker run --rm -it \
-        -v /home/"$USER"/blocks/resources/graphs/:/resources/graphs/ \
-        -v /home/"$USER"/blocks/resources/inputs/:/resources/inputs/ \
+        -v /home/"$USER"/resources/graphs/:/resources/graphs/ \
+        -v /home/"$USER"/resources/inputs/:/resources/inputs/ \
         -e BUFFER_SIZE_M=100000 \
         -e API_KEY="$API_KEY" \
         -e GEOID="$GEOID" \
