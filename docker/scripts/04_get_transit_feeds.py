@@ -44,11 +44,11 @@ feeds_in_buff = feeds_in_buff.loc[pd.notnull(feeds_in_buff['geoid'])]
 
 # Download feeds if they exist inside the buffer
 if feeds_in_buff.shape[0] > 0:
-
+    print('Getting feed download URLs...')
     feeds = pd.DataFrame()
+
     # Get the URL of the latest feed version for all feeds in buffer
     for loc_id in feeds_in_buff.id:
-        print('Getting feed download URLs...')
         feed_query_url = 'https://api.transitfeeds.com/v1/getFeeds?key=' + api_key + \
         '&location=' + str(loc_id) + '&descendants=1&page=1&limit=100&type=gtfs'
         feed_query_json = r.get(feed_query_url).json()['results']['feeds']
@@ -64,4 +64,4 @@ if feeds_in_buff.shape[0] > 0:
         urllib.request.urlretrieve(feed_url, os.path.join(output_path, file_name))
 
 else:
-    print('No feeds for county: ' + geoid)
+    print('No feeds for GEOID: ' + geoid)
