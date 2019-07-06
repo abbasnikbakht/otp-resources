@@ -9,7 +9,7 @@ The container takes the following inputs as Docker environmental variables, all 
 - API_KEY (a transitfeeds.com API key for getting GTFS feeds)
 - BUFFER_SIZE_M (the size of the county buffer, in meters)
 
-After being run, the container will download some intermediate files and save them to the `/resources/inputs/` directory in the container. This directory can be mapped from the host or from a Docker volume to get persistent storage for the input files (so that they don't need to be downloaded every time). See `submit_jobs.sh` for a typical use case, where both the input and output directories are mounted from the host.
+After being run, the container will download some intermediate files and save them to the `/resources/inputs/` directory in the container. This directory can be mapped from the host or from a Docker volume to get persistent storage for the input files (so that they don't need to be downloaded every time). See `submit_jobs_simple.sh` for a typical use case, where both the input and output directories are mounted from the host.
 
 Inputs files saved to `/resources/inputs/` are structured in the following way (using GEOID=17031 as an example):
 

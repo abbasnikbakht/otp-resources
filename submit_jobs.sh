@@ -15,23 +15,24 @@ MAX_CONTAINERS=8                               # max containers to run simul.
 
 ###### SUBMIT JOBS ######
 
-# Get jobs remaining by comparing full county list to dirs in graphs dir
-# Write remaining jobs to random remaining.txt file
-if [ ! -f remaining.txt ]; then
-    comm -13 \
-        <(ls $GRAPHS_DIR | sort) \
-        <(cat counties.csv | sort) \
-        > remaining.txt
-fi
+# Create a filename for remaining jobs
+remaining_file=/tmp/RESOURCE-remaining.txt
 
-echo "There are $(cat remaining.txt | wc -l) counties remaining"
+# Get jobs remaining by comparing full county list to dirs in graphs dir
+# Write remaining jobs to random $remaining_file file
+comm -13 \
+    <(ls $GRAPHS_DIR | sort) \
+    <(cat counties.csv | sort) \
+    > $remaining_file
+
+echo "There are $(cat $remaining_file | wc -l) counties remaining"
 
 # While there are less than N containers running, spin up more
-while [ $(cat remaining.txt | wc -l) ]; do
+while [ $(cat $remaining_file | wc -l) ]; do
     while [ $(docker ps | wc -l) -lt $MAX_CONTAINERS ]; do
 
-    # Get last line of remaining.txt file
-    GEOID=$(awk '/./{line=$0} END{print line}' remaining.txt)
+    # Get last line of $remaining_file file
+    GEOID=$(awk '/./{line=$0} END{print line}' $remaining_file)
     echo "Now running GEOID: $GEOID"
 
     # Run job
@@ -43,8 +44,8 @@ while [ $(cat remaining.txt | wc -l) ]; do
         -e GEOID="$GEOID" \
         snowdfs/otp-resources
 
-    # Remove last line of remaining.txt file
-    sed -i '$ d' remaining.txt
+    # Remove last line of $remaining_file file
+    sed -i '$ d' $remaining_file
 
     done
 done
