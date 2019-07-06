@@ -36,7 +36,7 @@ while [ $(cat $remaining_file | wc -l) ]; do
     echo "Now running GEOID: $GEOID"
 
     # Run job
-    docker run -d --rm -it \
+    docker run -d --rm \
         -v $GRAPHS_DIR:/resources/graphs/ \
         -v $INPUTS_DIR:/resources/inputs/ \
         -e BUFFER_SIZE_M=$BUFFER_SIZE_M \
