@@ -78,7 +78,7 @@ fi
 
 # Create a clipped PBF of the buffered county for TRANSIT and WALK
 if [ ! -f /resources/graphs/"$GEOID"/osm/"$GEOID"-all.pbf ]; then
-    echo "Creating a clipped PBF of OSM ways in the "$GEOID" buffer..."
+    echo "Creating a clipped PBF of OSM ways in the "$GEOID" buffer for TRANSIT and WALK..."
     clipping_poly="/resources/inputs/buffers/"$GEOID".geojson"
     osmium extract -p "$clipping_poly" \
         /resources/inputs/osm/"$tag_file_all" \
@@ -88,7 +88,7 @@ fi
 
 # Create a clipped PBF of the buffered county for CAR
 if [ ! -f /resources/graphs/"$GEOID"/osm/"$GEOID"-car.pbf ]; then
-    echo "Creating a clipped PBF of OSM ways in the "$GEOID" buffer..."
+    echo "Creating a clipped PBF of OSM ways in the "$GEOID" buffer for CAR..."
     clipping_poly="/resources/inputs/buffers/"$GEOID".geojson"
     osmium extract -p "$clipping_poly" \
         /resources/inputs/osm/"$tag_file_car" \
