@@ -65,3 +65,9 @@ Output files are structured in the following way (using two GEOIDs as an example
 
 ```
 
+### Running Without Root
+
+If you need to run this container but don't have the root privileges necessary to install Docker, try using [udocker](https://github.com/indigo-dc/udocker). There are only two changes required when using udocker:
+
+1. Alias `docker` to the udocker executable
+2. Manually create the directories that you plan to store resources in (udocker seems to have trouble creating new directories on the host)
