@@ -5,7 +5,7 @@
 API_KEY="9e99e97a-f205-414e-9078-af5b2868e9fd"
 
 # Run sample jobs for each state
-for GEOID in $(cat seed.csv); do
+for GEOID in 17009; do
 
     docker run --rm \
         -v /home/$USER/resources/graphs/:/resources/graphs/ \

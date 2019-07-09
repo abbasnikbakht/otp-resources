@@ -20,10 +20,14 @@ remaining_file=/tmp/RESOURCE-remaining.txt
 
 # Get jobs remaining by comparing full county list to dirs in graphs dir
 # Write remaining jobs to random $remaining_file file
+if [ ! -f $remaining_file ]; then
+
 comm -13 \
     <(ls $GRAPHS_DIR | sort) \
     <(cat counties.csv | sort) \
     > $remaining_file
+
+fi
 
 echo "There are $(cat $remaining_file | wc -l) counties remaining"
 
