@@ -2,10 +2,10 @@
 
 # Requires a transitfeeds.com API key for downloading GTFS feeds
 # Get an API key here: http://transitfeeds.com/api/
-API_KEY="9e99e97a-f205-414e-9078-af5b2868e9fd"
+API_KEY=""
 
 # Run sample jobs for each state
-for GEOID in 17009; do
+for GEOID in $(cat cities.csv | cut -d, -f1); do
 
     docker run --rm \
         -v /home/$USER/resources/graphs/:/resources/graphs/ \
